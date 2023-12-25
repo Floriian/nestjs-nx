@@ -24,8 +24,8 @@ export class User {
   password: string;
 
   @ApiProperty()
-  @Column()
-  token: string;
+  @Column({ nullable: true })
+  token?: string;
 
   @BeforeInsert()
   @BeforeUpdate()
