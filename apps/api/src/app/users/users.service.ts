@@ -3,16 +3,24 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserRepository } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SignInDto } from 'apps/api/src/app/auth/dto/sign-in.dto';
+import { SignInDto } from '../auth/dto/sign-in.dto';
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: UserRepository) {}
   async create(createUserDto: CreateUserDto | SignInDto) {
     try {
-      await this.userRepository.create(createUserDto);
+      return await this.userRepository.create(createUserDto);
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async findOneByEmail(email: string) {
+    return await this.userRepository.findOneBy({ email });
+  }
+
+  async update(id: number, dto: UpdateUserDto) {
+    return await this.userRepository.update({ id }, dto);
   }
 
   findAll() {
@@ -21,10 +29,6 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
   }
 
   remove(id: number) {
