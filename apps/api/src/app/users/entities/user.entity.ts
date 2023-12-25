@@ -29,3 +29,5 @@ export class User extends Model {
     user.token = await argon2.hash(user.token);
   }
 }
+
+export type UserModel = typeof User;
