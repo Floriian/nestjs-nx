@@ -60,7 +60,7 @@ describe('AuthService', () => {
   });
 
   describe('Sign in', () => {
-    it('should return access token and refresh token, when credentials are valid', async () => {
+    it('Should return access token and refresh token, when credentials are valid', async () => {
       const password = await argon2.hash(dto.password);
       const user = { id: 1, email: dto.email, password, hashFields: jest.fn() };
       const tokens = {
