@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Req, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -6,7 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Public } from './decorators/public.decorator';
 import { RtGuard } from './guards/rt.guard';
 import { Request } from 'express';
-import { GetUserId } from 'apps/api/src/app/auth/decorators/get-user-id.decorator';
+import { GetUserId } from './decorators/get-user-id.decorator';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
