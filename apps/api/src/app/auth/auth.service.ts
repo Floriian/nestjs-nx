@@ -7,6 +7,7 @@ import { UserExistsException } from './exceptions/user-exists.exception';
 import { UserNotFoundException } from './exceptions/user-not-found.exeption';
 import { IncorrectPasswordException } from './exceptions/incorrect-password.exception';
 import argon2 from 'argon2';
+import { AccessDeniedException } from './exceptions/access-denied.exception';
 @Injectable()
 export class AuthService {
   constructor(
@@ -36,5 +37,27 @@ export class AuthService {
       userId: newUser.id,
       email: newUser.email,
     });
+  }
+
+  async logout(id: number) {
+    return this.usersService.update(id, { refresh_token: null });
+  }
+
+  async refreshTokens(id: number, token: string) {
+    const user = await this.usersService.findOneById(id);
+    if (!user || !user.token) throw new AccessDeniedException();
+
+    const isTokenMatches = await argon2.verify(user.token, token);
+    if (!isTokenMatches) throw new AccessDeniedException();
+
+    const tokens = await this.tokenService.generateTokens({
+      email: user.email,
+      userId: user.id,
+    });
+    await this.usersService.update(user.id, {
+      refresh_token: tokens.refresh_token,
+    });
+
+    return tokens;
   }
 }

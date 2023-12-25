@@ -19,6 +19,10 @@ export class UsersService {
     return await this.userRepository.findOneBy({ email });
   }
 
+  async findOneById(id: number) {
+    return await this.userRepository.findOneBy({ id });
+  }
+
   async update(id: number, dto: UpdateUserDto) {
     return await this.userRepository.update({ id }, dto);
   }
