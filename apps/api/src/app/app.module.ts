@@ -6,6 +6,7 @@ import { envSchema } from './env/env.schema';
 import { EnvModule } from './env/env.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { sequelizeConfig } from './config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { sequelizeConfig } from './config';
     }),
     SequelizeModule.forRootAsync(sequelizeConfig),
     EnvModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
