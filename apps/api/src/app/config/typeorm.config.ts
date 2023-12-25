@@ -1,6 +1,7 @@
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { EnvModule } from '../env/env.module';
 import { EnvService } from '../env/env.service';
+import { User } from '../users/entities/user.entity';
 export const typeormConfig: TypeOrmModuleAsyncOptions = {
   imports: [EnvModule],
   inject: [EnvService],
@@ -11,5 +12,6 @@ export const typeormConfig: TypeOrmModuleAsyncOptions = {
     password: envService.get('DATABASE_PASSWORD'),
     database: envService.get('DATABASE_DB'),
     type: 'postgres',
+    entities: [User],
   }),
 };

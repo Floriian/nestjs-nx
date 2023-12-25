@@ -5,11 +5,16 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  PrimaryGeneratedColumn,
   Repository,
 } from 'typeorm';
 
 @Entity()
 export class User {
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @ApiProperty()
   @Column()
   email: string;
