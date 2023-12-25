@@ -4,9 +4,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { envSchema } from './env/env.schema';
 import { EnvModule } from './env/env.module';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { sequelizeConfig } from './config';
 import { AuthModule } from './auth/auth.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeormConfig } from './config';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       validate: (env) => envSchema.parse(env),
     }),
-    SequelizeModule.forRootAsync(sequelizeConfig),
+    TypeOrmModule.forRootAsync(typeormConfig),
     EnvModule,
     AuthModule,
   ],

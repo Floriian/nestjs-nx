@@ -1,33 +1,33 @@
-import {
-  BeforeCreate,
-  BeforeUpdate,
-  Column,
-  Model,
-  Table,
-} from 'sequelize-typescript';
 import argon2 from 'argon2';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  Repository,
+} from 'typeorm';
 
-@Table
-export class User extends Model {
+@Entity()
+export class User {
   @ApiProperty()
-  @Column
+  @Column()
   email: string;
 
   @ApiProperty()
-  @Column
+  @Column()
   password: string;
 
   @ApiProperty()
-  @Column
+  @Column()
   token: string;
 
-  @BeforeCreate
-  @BeforeUpdate
-  static async hashFields(user: User) {
-    user.password = await argon2.hash(user.password);
-    user.token = await argon2.hash(user.token);
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashFields() {
+    this.password = await argon2.hash(this.password);
+    this.token = await argon2.hash(this.token);
   }
 }
 
-export type UserModel = typeof User;
+export type UserRepository = Repository<User>;
