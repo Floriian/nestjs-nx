@@ -12,5 +12,6 @@ export const typeormConfig: TypeOrmModuleAsyncOptions = {
     database: envService.get('DATABASE_DB'),
     type: 'postgres',
     autoLoadEntities: true,
+    synchronize: true,
   }),
 };
