@@ -3,10 +3,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserRepository } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SignInDto } from 'apps/api/src/app/auth/dto/sign-in.dto';
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: UserRepository) {}
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto | SignInDto) {
     try {
       await this.userRepository.create(createUserDto);
     } catch (e) {
