@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dc:up": "cd docker && docker compose up -d && cd .."
+    "dc:up": "cd docker && docker compose up -d && cd ..", 
+    "dev": "npm run dc:up && nx run-many --parallel --targets=serve --projects=client,api"
   },
   "private": true,
   "dependencies": {
