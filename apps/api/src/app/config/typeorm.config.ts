@@ -32,8 +32,6 @@ export function buildDataSourceOptions(
 const dataSourceOptions = buildDataSourceOptions(
   new EnvService(new ConfigService())
 );
-
-console.log(dataSourceOptions);
 export default new DataSource({
   ...dataSourceOptions,
 });
