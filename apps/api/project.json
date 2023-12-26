@@ -70,7 +70,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "cwd": "apps/api",
-        "commands": ["npx typeorm -d ../../dist/apps/typeorm-migration/src/main.js migration:generate"]
+        "commands": ["npx typeorm -d ../../dist/apps/typeorm-migration/src/app/config/typeorm.config.js migration:generate"]
       },
       "dependsOn": ["build-migration-config"]
     },
@@ -79,7 +79,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "cwd": "apps/api",
-        "commands": ["npx typeorm -d ../../dist/apps/typeorm-migration/src/main.js migration:run"]
+        "commands": ["npx typeorm -d ../../dist/apps/typeorm-migration/src/app/config/typeorm.config.js migration:run"]
       },
       "dependsOn": ["build-migration-config"]
     }

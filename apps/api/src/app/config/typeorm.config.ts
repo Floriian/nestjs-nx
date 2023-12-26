@@ -1,8 +1,11 @@
 import { TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { EnvModule } from '../env/env.module';
 import { EnvService } from '../env/env.service';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import path from 'path';
+
 export const typeormConfig: TypeOrmModuleAsyncOptions = {
   imports: [EnvModule],
   inject: [EnvService],
@@ -11,7 +14,7 @@ export const typeormConfig: TypeOrmModuleAsyncOptions = {
 
 export function buildDataSourceOptions(
   envService: EnvService
-): DataSourceOptions {
+): PostgresConnectionOptions {
   return {
     host: envService.get('DATABASE_HOST'),
     port: envService.get('DATABASE_PORT'),
@@ -19,8 +22,10 @@ export function buildDataSourceOptions(
     password: envService.get('DATABASE_PASSWORD'),
     database: envService.get('DATABASE_DB'),
     type: 'postgres',
-    migrations: [__dirname + '/typeorm-migration/*.{ts,js}'],
-    entities: [__dirname + '/**/*.entity.{js,ts}'],
+    migrations: [
+      path.join(__dirname + './typeorm-migration/***/***/***/***/*.{ts,js}'),
+    ],
+    entities: [path.join(__dirname + '/***/***/***/*.entity.{js,ts}')],
   };
 }
 
@@ -29,7 +34,6 @@ const dataSourceOptions = buildDataSourceOptions(
 );
 
 console.log(dataSourceOptions);
-
 export default new DataSource({
   ...dataSourceOptions,
 });
