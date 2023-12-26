@@ -27,7 +27,7 @@ export class AuthController {
   @UseGuards(RtGuard)
   @Post('logout')
   logout(@Req() req: Request) {
-    this.authService.logout(req.user['sub']);
+    return this.authService.logout(req.user['sub']);
   }
 
   @UseGuards(RtGuard)
