@@ -22,6 +22,8 @@ export class SignUpDto {
 
   @ApiProperty()
   @IsString()
-  @Match(SignUpDto, (s) => s.password)
+  @Match(SignUpDto, (s) => s.password, {
+    message: "password's doesn't matches",
+  })
   confirmPassword: string;
 }

@@ -7,9 +7,9 @@ import { SignInDto } from '../auth/dto/sign-in.dto';
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: UserRepository) {}
-  async create(createUserDto: CreateUserDto | SignInDto) {
+  async create(dto: SignInDto | CreateUserDto) {
     try {
-      return await this.userRepository.create(createUserDto);
+      return await this.userRepository.save(dto);
     } catch (e) {
       console.log(e);
     }
