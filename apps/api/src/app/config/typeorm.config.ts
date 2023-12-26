@@ -6,19 +6,12 @@ import { ConfigService } from '@nestjs/config';
 export const typeormConfig: TypeOrmModuleAsyncOptions = {
   imports: [EnvModule],
   inject: [EnvService],
-  useFactory: (envService: EnvService) => ({
-    host: envService.get('DATABASE_HOST'),
-    port: envService.get('DATABASE_PORT'),
-    username: envService.get('DATABASE_USER'),
-    password: envService.get('DATABASE_PASSWORD'),
-    database: envService.get('DATABASE_DB'),
-    type: 'postgres',
-    autoLoadEntities: true,
-    synchronize: true,
-  }),
+  useFactory: buildDataSourceOptions,
 };
 
-export const buildDataSource = (envService: EnvService): DataSourceOptions => {
+export function buildDataSourceOptions(
+  envService: EnvService
+): DataSourceOptions {
   return {
     host: envService.get('DATABASE_HOST'),
     port: envService.get('DATABASE_PORT'),
@@ -26,10 +19,17 @@ export const buildDataSource = (envService: EnvService): DataSourceOptions => {
     password: envService.get('DATABASE_PASSWORD'),
     database: envService.get('DATABASE_DB'),
     type: 'postgres',
-    synchronize: true,
+    migrations: [__dirname + '/typeorm-migration/*.{ts,js}'],
+    entities: [__dirname + '/**/*.entity.{js,ts}'],
   };
-};
+}
 
-export default new DataSource(
-  buildDataSource(new EnvService(new ConfigService()))
+const dataSourceOptions = buildDataSourceOptions(
+  new EnvService(new ConfigService())
 );
+
+console.log(dataSourceOptions);
+
+export default new DataSource({
+  ...dataSourceOptions,
+});
