@@ -4,9 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dc:up": "cd docker && docker compose up -d && cd ..",
-    "dev": "npm run dc:up && nx run-many --parallel --targets=serve --projects=client,api",
-    "migration:generate": "nx run api:typeorm-generate-migrations -- src/app/migrations/$npm_config_name",
-    "migration:revert": "nx run api:typeorm-revert-migrations"
+    "dev": "npm run dc:up && nx run-many --parallel --targets=serve --projects=client,api"
   },
   "private": true,
   "dependencies": {
