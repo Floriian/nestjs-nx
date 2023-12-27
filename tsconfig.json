@@ -1,9 +1,0 @@
-{
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@ui/shared": ["libs/shared/src/index.ts"],
-            "@ui/shared/*": ["libs/shared/src*"]
-        }
-    }
-}
