@@ -4,7 +4,6 @@ import { EnvService } from '../env/env.service';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
-import { readdir } from 'fs';
 
 export const typeormConfig: TypeOrmModuleAsyncOptions = {
   imports: [EnvModule],
