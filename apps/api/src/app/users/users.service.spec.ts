@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { UserRepository } from './entities/user.entity';
+import { User, UserRepository } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserExistsException } from './exceptions/user-exists.exception';
+import { QueryFailedError } from 'typeorm';
+import { UserNotFoundException } from './exceptions/user-not-found.exeption';
 
 const mockedUserRepository = () => ({
   save: jest.fn(),
@@ -14,6 +16,12 @@ const createUserDto: CreateUserDto = {
   email: 'user@example.com',
   password: 'asdasd',
   confirmPassword: 'asdasd',
+};
+
+const returnedUserFromDatabase = {
+  ...createUserDto,
+  id: 1,
+  hashFields: jest.fn(),
 };
 
 describe('UsersService', () => {
@@ -38,12 +46,6 @@ describe('UsersService', () => {
 
   describe('Create', () => {
     it('Should create a new user', async () => {
-      const returnedUserFromDatabase = {
-        ...createUserDto,
-        id: 1,
-        hashFields: jest.fn(),
-      };
-
       jest
         .spyOn(userRepository, 'save')
         .mockResolvedValueOnce(returnedUserFromDatabase);
@@ -60,11 +62,69 @@ describe('UsersService', () => {
       };
 
       jest
-        .spyOn(userRepository, 'findOneBy')
-        .mockResolvedValueOnce(returnedUserFromDatabase);
+        .spyOn(userRepository, 'save')
+        .mockImplementationOnce(() =>
+          Promise.reject(
+            new QueryFailedError(
+              '',
+              [],
+              'duplicate key value violates unique constraint'
+            )
+          )
+        );
 
       await expect(service.create(createUserDto)).rejects.toThrow(
         UserExistsException
+      );
+    });
+  });
+
+  describe('findOneByEmail', () => {
+    it('Should return user', async () => {
+      const user: User = {
+        email: 'test@example.com',
+        id: 1,
+        password: 'asdasd',
+        token: '',
+        hashFields: jest.fn(),
+      };
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(user);
+
+      expect(await service.findOneByEmail(user.email)).toEqual(user);
+    });
+
+    it('Should return UserNotFoundException', async () => {
+      const nonExistentEmail = 'nonexistent@example.com';
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
+
+      await expect(service.findOneByEmail(nonExistentEmail)).rejects.toThrow(
+        UserNotFoundException
+      );
+    });
+  });
+
+  describe('findOne', () => {
+    it('Should return user', async () => {
+      const user: User = {
+        email: 'test@example.com',
+        id: 1,
+        password: 'asdasd',
+        token: '',
+        hashFields: jest.fn(),
+      };
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(user);
+
+      expect(await service.findOneById(user.id)).toEqual(user);
+    });
+
+    it('Should return UserNotFoundException', async () => {
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
+
+      await expect(service.findOneById(0)).rejects.toThrow(
+        UserNotFoundException
       );
     });
   });

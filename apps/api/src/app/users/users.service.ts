@@ -15,13 +15,10 @@ export class UsersService {
       return await this.userRepository.save(dto);
     } catch (e) {
       if (e instanceof QueryFailedError) {
-        console.log(e.message);
-        if (
-          e.message.includes('duplicate key value violates unique constraint')
-        )
-          throw new UserExistsException();
+        throw new UserExistsException();
       }
       console.log(e);
+      throw e;
     }
   }
 
@@ -32,7 +29,9 @@ export class UsersService {
   }
 
   async findOneById(id: number) {
-    return await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) throw new UserNotFoundException();
+    return user;
   }
 
   async update(id: number, dto: UpdateUserDto) {
