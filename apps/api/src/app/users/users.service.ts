@@ -15,11 +15,13 @@ export class UsersService {
       return await this.userRepository.save(dto);
     } catch (e) {
       if (e instanceof QueryFailedError) {
+        console.log(e.message);
         if (
           e.message.includes('duplicate key value violates unique constraint')
         )
           throw new UserExistsException();
-      } else throw new NotImplementedException();
+      }
+      console.log(e);
     }
   }
 

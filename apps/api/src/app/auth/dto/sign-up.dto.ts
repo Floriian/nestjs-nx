@@ -6,6 +6,7 @@ import {
   IsEmail,
   IsStrongPassword,
 } from 'class-validator';
+import { passwordCriteria } from '../../utils';
 
 export class SignUpDto {
   @ApiProperty()
@@ -16,7 +17,7 @@ export class SignUpDto {
 
   @ApiProperty()
   @IsString()
-  @IsStrongPassword({ minSymbols: 0, minUppercase: 1 })
+  @IsStrongPassword(passwordCriteria)
   @IsNotEmpty()
   password: string;
 
