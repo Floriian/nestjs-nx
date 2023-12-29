@@ -55,12 +55,6 @@ describe('UsersService', () => {
     });
 
     it('Should throw UserExistsException if the user already exists', async () => {
-      const returnedUserFromDatabase = {
-        ...createUserDto,
-        id: 1,
-        hashFields: jest.fn(),
-      };
-
       jest
         .spyOn(userRepository, 'save')
         .mockImplementationOnce(() =>
