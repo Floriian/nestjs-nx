@@ -4,10 +4,8 @@ import { UsersService } from '../users/users.service';
 import { TokenService } from '../token/token.service';
 import { SignInDto } from './dto/sign-in.dto';
 import argon2 from 'argon2';
-import { UserNotFoundException } from './exceptions/user-not-found.exeption';
 import { IncorrectPasswordException } from './exceptions/incorrect-password.exception';
 import { SignUpDto } from './dto/sign-up.dto';
-import { UserExistsException } from './exceptions/user-exists.exception';
 
 const mockedRepostory = () => ({
   findOneBy: jest.fn(),
@@ -74,12 +72,6 @@ describe('AuthService', () => {
       expect(await service.signIn(dto)).toBe(tokens);
     });
 
-    it('Should throw UserNotFoundException when user does not exist', async () => {
-      jest.spyOn(usersService, 'findOneByEmail').mockResolvedValueOnce(null);
-
-      await expect(service.signIn(dto)).rejects.toThrow(UserNotFoundException);
-    });
-
     it('Should throw IncorrectPasswordException if password is incorrect', async () => {
       const dto: SignInDto = {
         email: 'test@example.com',
@@ -103,20 +95,6 @@ describe('AuthService', () => {
   });
 
   describe('Sign up', () => {
-    it('Should throw UserExistsException if the user already exists', async () => {
-      jest.spyOn(usersService, 'findOneByEmail').mockResolvedValueOnce({
-        ...signUpDto,
-        hashFields: jest.fn(),
-        password: 'asdhjaskdhaskjd',
-        email: dto.email,
-        id: 1,
-      });
-
-      await expect(service.signUp(signUpDto)).rejects.toThrow(
-        UserExistsException
-      );
-    });
-
     it('Should return a token when sign up is successful', async () => {
       const user = {
         id: 1,

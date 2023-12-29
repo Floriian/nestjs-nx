@@ -1,9 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserRepository } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignInDto } from '../auth/dto/sign-in.dto';
+import { QueryFailedError } from 'typeorm';
+import { UserExistsException } from './exceptions/user-exists.exception';
+import { UserNotFoundException } from './exceptions/user-not-found.exeption';
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: UserRepository) {}
@@ -11,12 +14,19 @@ export class UsersService {
     try {
       return await this.userRepository.save(dto);
     } catch (e) {
-      console.log(e);
+      if (e instanceof QueryFailedError) {
+        if (
+          e.message.includes('duplicate key value violates unique constraint')
+        )
+          throw new UserExistsException();
+      } else throw new NotImplementedException();
     }
   }
 
   async findOneByEmail(email: string) {
-    return await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) throw new UserNotFoundException();
+    return user;
   }
 
   async findOneById(id: number) {
