@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@nestjs-nx/ui": ["libs/ui/src/index.ts"],
+      "@nestjs-nx/ui/*": ["libs/ui/src/*"]
+    }
+  }
+}
